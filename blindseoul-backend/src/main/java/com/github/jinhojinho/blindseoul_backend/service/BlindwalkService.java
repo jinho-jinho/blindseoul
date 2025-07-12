@@ -19,4 +19,8 @@ public class BlindwalkService {
     public List<BlindwalkInfo> findAll() {
         return blindwalkRepository.findAll();
     }
+
+    public List<BlindwalkInfo> findNearby(double userLat, double userLon, double radiusKm) {
+        return blindwalkRepository.findNearby(userLat, userLon, radiusKm);
+    }
 }

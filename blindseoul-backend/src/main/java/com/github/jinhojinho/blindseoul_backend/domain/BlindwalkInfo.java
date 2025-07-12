@@ -1,6 +1,5 @@
 package com.github.jinhojinho.blindseoul_backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

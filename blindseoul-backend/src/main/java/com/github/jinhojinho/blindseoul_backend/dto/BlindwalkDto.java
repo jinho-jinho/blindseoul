@@ -3,7 +3,7 @@ package com.github.jinhojinho.blindseoul_backend.dto;
 import lombok.Data;
 
 @Data
-public class Blindwalkdto {
+public class BlindwalkDto {
     private Long sidewalkId;
     private Integer subId;
     private Double latMin;
