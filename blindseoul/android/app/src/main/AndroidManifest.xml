@@ -3,6 +3,9 @@
         android:label="blindseoul"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyD7n5RW_8rVqGMGa-Rv5IavCzW7_xOLY5Q"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

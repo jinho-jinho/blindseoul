@@ -2,7 +2,6 @@ package com.github.jinhojinho.blindseoul_backend.repository;
 
 import com.github.jinhojinho.blindseoul_backend.domain.BlindwalkInfo;
 import jakarta.persistence.EntityManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
