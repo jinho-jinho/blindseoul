@@ -29,9 +29,18 @@ class _BlindwalkMapScreenState extends State<BlindwalkMapScreen> {
     Set<Polyline> newPolylines = {};
 
     for (var location in locations) {
+      Color polylineColor;
+      if (location.brllBlkKndCode == 'BAI001') {
+        polylineColor = Colors.blue; // 유도형
+      } else if (location.brllBlkKndCode == 'BAI002') {
+        polylineColor = Colors.red; // 경고형
+      } else {
+        polylineColor = Colors.grey; // 혹시 모를 기타 (BAI003 등)
+      }
+
       newPolylines.add(Polyline(
         polylineId: PolylineId('${location.sidewalkId}_${location.subId}'),
-        color: Colors.blue,
+        color: polylineColor,
         width: 4,
         points: [
           LatLng(location.latMin, location.lonMin),
@@ -52,10 +61,10 @@ class _BlindwalkMapScreenState extends State<BlindwalkMapScreen> {
       body: GoogleMap(
         onMapCreated: (controller) => _mapController = controller,
         initialCameraPosition: CameraPosition(
-          target: LatLng(37.5665, 126.9780), // 서울시청
+          target: LatLng(37.5665, 126.9780),
           zoom: 14,
         ),
-        markers: {}, // 마커 없이 빈 Set
+        markers: {}, // 마커 없음
         polylines: _polylines,
       ),
     );

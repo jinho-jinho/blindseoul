@@ -4,12 +4,12 @@ import '../model/blindwalk_dto.dart';
 class BlindwalkApi {
   final Dio _dio = Dio();
 
-  Future<List<BlindwalkDto>> fetchBlindwalkLocations() async {
-    final response = await _dio.get('http://192.168.0.31:8080/blindwalk/all');
+  // Future<List<BlindwalkDto>> fetchBlindwalkLocations() async {
+  //   final response = await _dio.get('http://192.168.0.31:8080/blindwalk/all');
 
-    List<dynamic> body = response.data;
-    return body.map((e) => BlindwalkDto.fromJson(e)).toList();
-  }
+  //   List<dynamic> body = response.data;
+  //   return body.map((e) => BlindwalkDto.fromJson(e)).toList();
+  // }
 
   Future<List<BlindwalkDto>> fetchNearbyBlindwalkLocations({
     required double userLat,
@@ -17,7 +17,7 @@ class BlindwalkApi {
     double radiusKm = 0.5,
   }) async {
     final response = await _dio.get(
-      'http://192.168.0.31:8080/blindwalk/nearby',
+      'http://172.30.1.41:8080/blindwalk/nearby',
       queryParameters: {
         'lat': userLat,
         'lon': userLon,
