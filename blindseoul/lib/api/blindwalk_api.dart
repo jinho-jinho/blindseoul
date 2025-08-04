@@ -17,7 +17,7 @@ class BlindwalkApi {
     double radiusKm = 0.5,
   }) async {
     final response = await _dio.get(
-      'http://172.30.1.41:8080/blindwalk/nearby',
+      'http://192.168.0.15:8080/blindwalk/nearby',
       queryParameters: {
         'lat': userLat,
         'lon': userLon,

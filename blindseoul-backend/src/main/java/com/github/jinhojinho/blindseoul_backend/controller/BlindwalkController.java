@@ -17,17 +17,8 @@ public class BlindwalkController {
 
     private final BlindwalkService blindwalkService;
 
-    @Autowired
     public BlindwalkController(BlindwalkService blindwalkService) {
         this.blindwalkService = blindwalkService;
-    }
-
-    @GetMapping("/all")
-    public List<BlindwalkDto> getAllBlindwalkLocation() {
-        return blindwalkService.findAll()
-                .stream()
-                .map(this::convertToDto)
-                .toList();
     }
 
     @GetMapping("/nearby")

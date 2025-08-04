@@ -8,18 +8,15 @@ import java.util.List;
 
 @Service
 public class BlindwalkService {
-
     private final BlindwalkRepository blindwalkRepository;
 
     public BlindwalkService(BlindwalkRepository blindwalkRepository) {
         this.blindwalkRepository = blindwalkRepository;
     }
 
-    public List<BlindwalkInfo> findAll() {
-        return blindwalkRepository.findAll();
-    }
-
     public List<BlindwalkInfo> findNearby(double userLat, double userLon, double radiusKm) {
-        return blindwalkRepository.findNearby(userLat, userLon, radiusKm);
+        double radiusMeters = radiusKm * 1000;
+
+        return blindwalkRepository.findNearby(userLat, userLon, radiusMeters);
     }
 }

@@ -35,7 +35,7 @@ class _BlindwalkMapScreenState extends State<BlindwalkMapScreen> {
       } else if (location.brllBlkKndCode == 'BAI002') {
         polylineColor = Colors.red; // 경고형
       } else {
-        polylineColor = Colors.grey; // 혹시 모를 기타 (BAI003 등)
+        polylineColor = Colors.grey; // 기타 (경고형으로 간주하는게 맞을 듯, 추후 필요시 수정)
       }
 
       newPolylines.add(Polyline(
