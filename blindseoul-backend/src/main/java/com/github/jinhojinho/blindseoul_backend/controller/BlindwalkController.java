@@ -2,8 +2,9 @@ package com.github.jinhojinho.blindseoul_backend.controller;
 
 import com.github.jinhojinho.blindseoul_backend.domain.BlindwalkInfo;
 import com.github.jinhojinho.blindseoul_backend.dto.BlindwalkDto;
+import com.github.jinhojinho.blindseoul_backend.dto.common.ApiResponse;
 import com.github.jinhojinho.blindseoul_backend.service.BlindwalkService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,15 +23,18 @@ public class BlindwalkController {
     }
 
     @GetMapping("/nearby")
-    public List<BlindwalkDto> getNearbyBlindwalkLocation(
+    public ResponseEntity<ApiResponse<List<BlindwalkDto>>> getNearbyBlindwalkLocation(
             @RequestParam("lat") double userLat,
             @RequestParam("lon") double userLon,
             @RequestParam(value = "radius", defaultValue = "0.5") double radiusKm) {
 
-        return blindwalkService.findNearby(userLat, userLon, radiusKm)
+        List<BlindwalkDto> result = blindwalkService
+                .findNearby(userLat, userLon, radiusKm)
                 .stream()
                 .map(this::convertToDto)
                 .toList();
+
+        return ResponseEntity.ok(new ApiResponse<>(true, result, "주변 유도블록 조회 성공"));
     }
 
     private BlindwalkDto convertToDto(BlindwalkInfo entity) {

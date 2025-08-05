@@ -4,6 +4,7 @@ import com.github.jinhojinho.blindseoul_backend.domain.User;
 import com.github.jinhojinho.blindseoul_backend.dto.UserLoginRequestDto;
 import com.github.jinhojinho.blindseoul_backend.dto.UserResponseDto;
 import com.github.jinhojinho.blindseoul_backend.dto.UserSignupRequestDto;
+import com.github.jinhojinho.blindseoul_backend.dto.common.ApiResponse;
 import com.github.jinhojinho.blindseoul_backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,21 +19,27 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody UserSignupRequestDto dto) {
+    public ResponseEntity<ApiResponse<Long>> signup(@Valid @RequestBody UserSignupRequestDto dto) {
         Long userId = userService.signup(dto);
-        return ResponseEntity.ok("회원가입 성공 (id: " + userId + ")");
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, userId, "회원가입 성공")
+        );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody UserLoginRequestDto dto) {
+    public ResponseEntity<ApiResponse<Long>> login(@Valid @RequestBody UserLoginRequestDto dto) {
         User user = userService.login(dto);
-        return ResponseEntity.ok("로그인 성공 (id: " + user.getId() + ")");
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, user.getId(), "로그인 성공")
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<UserResponseDto>> getUser(@PathVariable Long id) {
         UserResponseDto userDto = userService.getUser(id);
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(
+                new ApiResponse<>(true, userDto, "회원 정보 조회 성공")
+        );
     }
 }
 
