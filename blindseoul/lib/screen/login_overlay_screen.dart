@@ -13,12 +13,17 @@ class LoginOverlayScreen extends StatelessWidget {
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
             child: Container(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withAlpha(76),
             ),
           ),
           Center(
             child: ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/login'),
+              onPressed: () async {
+                final result = await Navigator.pushNamed(context, '/login');
+                if (result == 'success') {
+                  Navigator.of(context).pop(); // 다이얼로그 닫기
+                }
+              },
               child: const Text('로그인 하러 가기'),
             ),
           ),

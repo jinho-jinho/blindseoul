@@ -123,6 +123,8 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final timerText = '${(remainingSeconds ~/ 60).toString().padLeft(1, '0')}:${(remainingSeconds % 60).toString().padLeft(2, '0')}';
+    bool _obscurePassword = true;
+    bool _obscureConfirmPassword = true;
 
     return Scaffold(
       appBar: AppBar(title: const Text('회원가입')),
@@ -168,13 +170,37 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               TextField(
                 controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: '비밀번호'),
+                obscureText: _obscurePassword,
+                decoration: InputDecoration(
+                  labelText: '비밀번호',
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscurePassword = !_obscurePassword;
+                      });
+                    },
+                  ),
+                ),
               ),
               TextField(
                 controller: confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: '비밀번호 확인'),
+                obscureText: _obscureConfirmPassword,
+                decoration: InputDecoration(
+                  labelText: '비밀번호 확인',
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
