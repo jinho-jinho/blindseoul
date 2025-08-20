@@ -66,6 +66,12 @@ class _HomeWithBottomNavState extends State<HomeWithBottomNav> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+
+    if (authProvider.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
