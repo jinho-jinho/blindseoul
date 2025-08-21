@@ -15,21 +15,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final passwordController = TextEditingController();
   final userApi = UserApi();
 
+  // lib/screen/login_screen.dart (핵심만 발췌)
   void _login() async {
-  try {
-    await userApi.login(
-      email: emailController.text,
-      password: passwordController.text,
-    );
-
-    Provider.of<AuthProvider>(context, listen: false).login();
-    Navigator.pop(context);
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${e.toString()}')),
-    );
+    try {
+      await userApi.login(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      await Provider.of<AuthProvider>(context, listen: false).login();
+      if (!mounted) return;
+      Navigator.pop(context, 'success');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$e')),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
