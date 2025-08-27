@@ -61,6 +61,16 @@ public class UserService {
         return toDto(user);
     }
 
+    @Transactional
+    public void changePasswordByEmail(String email, String newPassword){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+
+        user.setPassword(encodedPassword);
+    }
+
     private static UserResponseDto toDto(User user) {
         return new UserResponseDto(
                 user.getId(),

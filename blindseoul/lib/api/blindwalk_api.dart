@@ -5,8 +5,8 @@ import '../model/api_response.dart';
 import '../model/error_response.dart';
 
 class BlindwalkApi {
-  final String _baseUrl = 'http://192.168.0.15:8080';
-
+  //final String _baseUrl = 'http://192.168.0.15:8080';
+  final String _baseUrl = 'http://172.30.1.37:8080';
   Future<List<BlindwalkDto>> fetchNearbyBlindwalkLocations({
     required double userLat,
     required double userLon,

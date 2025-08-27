@@ -8,7 +8,8 @@ import '../core/token_storage.dart';
 import '../core/http_headers.dart';
 
 class UserApi {
-  final String _baseUrl = 'http://192.168.0.15:8080';
+  //final String _baseUrl = 'http://192.168.0.15:8080';
+  final String _baseUrl = 'http://172.30.1.37:8080';
 
   String _extractErrorMessage(http.Response response) {
     try {
@@ -93,7 +94,6 @@ class UserApi {
     await TokenStorage.clear();
   }
 
-  // 이메일 인증 API는 그대로 사용
   Future<void> sendVerificationCode(String email) async {
     final url = Uri.parse('$_baseUrl/api/auth/send-code?email=$email');
     final res = await http.post(url, headers: HttpHeadersHelper.json());
@@ -107,6 +107,45 @@ class UserApi {
     final res = await http.post(url, headers: HttpHeadersHelper.json());
     if (res.statusCode != 200) {
       throw Exception('이메일 인증 실패: ${_extractErrorMessage(res)}');
+    }
+  }
+
+  // 비밀번호 재설정 - 코드 전송
+  Future<void> sendPasswordResetCode(String email) async {
+    final url = Uri.parse('$_baseUrl/api/auth/send-code?email=$email&purpose=RESET_PASSWORD');
+    final res = await http.post(url, headers: HttpHeadersHelper.json());
+    if (res.statusCode != 200) {
+      throw Exception('인증번호 전송 실패: ${_extractErrorMessage(res)}');
+    }
+  }
+
+  // 비밀번호 재설정 - 코드 검증
+  Future<void> verifyPasswordResetCode(String email, String code) async {
+    final url = Uri.parse('$_baseUrl/api/auth/verify-code?email=$email&code=$code&purpose=RESET_PASSWORD');
+    final res = await http.post(url, headers: HttpHeadersHelper.json());
+    if (res.statusCode != 200) {
+      throw Exception('이메일 인증 실패: ${_extractErrorMessage(res)}');
+    }
+  }
+
+  Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    // 백엔드 엔드포인트는 아래처럼 가정 (컨트롤러에서 제공)
+    final url = Uri.parse('$_baseUrl/user/password/reset');
+    final res = await http.post(
+      url,
+      headers: HttpHeadersHelper.json(),
+      body: jsonEncode({
+        'email': email,
+        'code': code,
+        'newPassword': newPassword,
+      }),
+    );
+    if (res.statusCode != 200) {
+      throw Exception('비밀번호 변경 실패: ${_extractErrorMessage(res)}');
     }
   }
 }

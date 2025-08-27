@@ -7,6 +7,7 @@ import 'package:blindseoul/screen/login_overlay_screen.dart';
 import 'package:blindseoul/screen/login_screen.dart';
 import 'package:blindseoul/screen/signup_screen.dart';
 import 'package:blindseoul/provider/auth_provider.dart';
+import 'package:blindseoul/screen/password_reset_screen.dart';
 
 void main() {
   runApp(
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomeWithBottomNav(),
         '/login': (context) => const LoginScreen(),
         '/signup': (context) => const SignupScreen(),
+        '/password-reset': (_) => const PasswordResetScreen(),
       },
     );
   }

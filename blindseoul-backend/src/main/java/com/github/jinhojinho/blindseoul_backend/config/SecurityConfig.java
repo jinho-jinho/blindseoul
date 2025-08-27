@@ -33,11 +33,9 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 // 인증/인가 규칙
                 .authorizeHttpRequests(auth -> auth
-                        // ✅ 인증 없이 허용할 엔드포인트만 명시
-                        .requestMatchers("/user/signup", "/user/login").permitAll()
+                        .requestMatchers("/user/signup", "/user/login", "/user/password/reset").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/blindwalk/**").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/blindwalk/nearby").permitAll()
                         // OPTIONS(CORS Preflight) 허용 (필요 시)
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         // 나머지는 인증 필요
@@ -45,7 +43,7 @@ public class SecurityConfig {
                 )
                 // 인증 실패시 401
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
-                // ✅ JWT 필터 등록: UsernamePasswordAuthenticationFilter 앞
+                // JWT 필터 등록: UsernamePasswordAuthenticationFilter 앞
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

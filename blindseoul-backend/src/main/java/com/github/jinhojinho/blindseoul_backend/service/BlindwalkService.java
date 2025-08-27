@@ -3,10 +3,12 @@ package com.github.jinhojinho.blindseoul_backend.service;
 import com.github.jinhojinho.blindseoul_backend.domain.BlindwalkInfo;
 import com.github.jinhojinho.blindseoul_backend.repository.BlindwalkRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class BlindwalkService {
     private final BlindwalkRepository blindwalkRepository;
 

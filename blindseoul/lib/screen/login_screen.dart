@@ -58,6 +58,10 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () => Navigator.pushNamed(context, '/signup'),
               child: const Text('회원가입'),
             ),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, '/password-reset'),
+              child: const Text('비밀번호 찾기'),
+            ),
           ],
         ),
       ),
