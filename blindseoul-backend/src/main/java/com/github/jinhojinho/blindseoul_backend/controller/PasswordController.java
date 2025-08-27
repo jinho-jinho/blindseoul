@@ -1,19 +1,13 @@
 package com.github.jinhojinho.blindseoul_backend.controller;
 
-import com.github.jinhojinho.blindseoul_backend.domain.VerificationPurpose;
 import com.github.jinhojinho.blindseoul_backend.dto.ResetPasswordRequest;
 import com.github.jinhojinho.blindseoul_backend.dto.common.ApiResponse;
-import com.github.jinhojinho.blindseoul_backend.repository.EmailVerificationRepository;
-import com.github.jinhojinho.blindseoul_backend.service.EmailService;
 import com.github.jinhojinho.blindseoul_backend.service.PasswordResetService;
-import com.github.jinhojinho.blindseoul_backend.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
