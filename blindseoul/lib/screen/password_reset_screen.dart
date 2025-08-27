@@ -1,4 +1,3 @@
-// lib/screen/password_reset_screen.dart
 import 'package:flutter/material.dart';
 import '../api/user_api.dart';
 
@@ -14,24 +13,23 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
   final _codeCtrl = TextEditingController();
   final _newPwCtrl = TextEditingController();
   final _confirmPwCtrl = TextEditingController();
-
   final _api = UserApi();
 
   bool _sending = false;
   bool _verifying = false;
   bool _resetting = false;
 
-  bool _codeSent = false;     // 1단계 완료 플래그
-  bool _codeVerified = false; // 2단계 완료 플래그
+  bool _codeSent = false;
+  bool _codeVerified = false;
 
-  void _showSnack(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-  }
+  bool _obscureNewPw = true;
+  bool _obscureConfirmPw = true;
 
-  bool _isValidEmail(String email) {
-    // 아주 간단한 검증
-    return email.contains('@') && email.contains('.');
-  }
+  void _showSnack(String msg) =>
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+
+  bool _isValidEmail(String email) =>
+      RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email);
 
   Future<void> _sendCode() async {
     final email = _emailCtrl.text.trim();
@@ -98,100 +96,6 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
     }
   }
 
-  Widget _emailStep() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('1단계. 이메일 입력', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        TextField(
-          controller: _emailCtrl,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(
-            labelText: '이메일',
-            hintText: 'you@example.com',
-            border: OutlineInputBorder(),
-          ),
-          enabled: !_codeSent, // 코드 전송 후엔 이메일 못 바꾸게 잠금
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _codeSent || _sending ? null : _sendCode,
-            child: _sending ? const CircularProgressIndicator() : const Text('코드 전송'),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _codeStep() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Divider(height: 32),
-        const Text('2단계. 인증번호 확인', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        TextField(
-          controller: _codeCtrl,
-          decoration: const InputDecoration(
-            labelText: '인증번호',
-            hintText: '이메일로 받은 6자리 코드',
-            border: OutlineInputBorder(),
-          ),
-          enabled: _codeSent && !_codeVerified,
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: (!_codeSent || _codeVerified || _verifying) ? null : _verifyCode,
-            child: _verifying ? const CircularProgressIndicator() : const Text('코드 확인'),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _newPasswordStep() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Divider(height: 32),
-        const Text('3단계. 새 비밀번호 설정', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        TextField(
-          controller: _newPwCtrl,
-          obscureText: true,
-          decoration: const InputDecoration(
-            labelText: '새 비밀번호 (8자 이상)',
-            border: OutlineInputBorder(),
-          ),
-          enabled: _codeVerified,
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _confirmPwCtrl,
-          obscureText: true,
-          decoration: const InputDecoration(
-            labelText: '새 비밀번호 확인',
-            border: OutlineInputBorder(),
-          ),
-          enabled: _codeVerified,
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: (_codeVerified && !_resetting) ? _resetPassword : null,
-            child: _resetting ? const CircularProgressIndicator() : const Text('비밀번호 변경'),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   void dispose() {
     _emailCtrl.dispose();
@@ -203,16 +107,154 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(title: const Text('비밀번호 재설정')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            _emailStep(),
-            _codeStep(),
-            _newPasswordStep(),
-          ],
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 520),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Card(
+                elevation: 3,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        '비밀번호 재설정',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // 1단계 이메일
+                      TextField(
+                        controller: _emailCtrl,
+                        enabled: !_codeSent,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: '이메일',
+                          hintText: 'you@example.com',
+                          prefixIcon: const Icon(Icons.alternate_email),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          filled: true,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      FilledButton(
+                        onPressed: _codeSent || _sending ? null : _sendCode,
+                        child: _sending
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Text('코드 전송'),
+                      ),
+
+                      // 2단계 인증번호
+                      if (_codeSent) ...[
+                        const Divider(height: 32),
+                        TextField(
+                          controller: _codeCtrl,
+                          enabled: !_codeVerified,
+                          decoration: InputDecoration(
+                            labelText: '인증번호',
+                            hintText: '이메일로 받은 6자리 코드',
+                            prefixIcon: const Icon(Icons.verified_user_outlined),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        FilledButton.tonal(
+                          onPressed:
+                              (!_codeSent || _codeVerified || _verifying) ? null : _verifyCode,
+                          child: _verifying
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Text('코드 확인'),
+                        ),
+                      ],
+
+                      // 3단계 새 비밀번호
+                      if (_codeVerified) ...[
+                        const Divider(height: 32),
+                        TextField(
+                          controller: _newPwCtrl,
+                          obscureText: _obscureNewPw,
+                          decoration: InputDecoration(
+                            labelText: '새 비밀번호 (8자 이상)',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            suffixIcon: IconButton(
+                              onPressed: () => setState(() {
+                                _obscureNewPw = !_obscureNewPw;
+                              }),
+                              icon: Icon(
+                                _obscureNewPw ? Icons.visibility_off : Icons.visibility,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: _confirmPwCtrl,
+                          obscureText: _obscureConfirmPw,
+                          decoration: InputDecoration(
+                            labelText: '새 비밀번호 확인',
+                            prefixIcon: const Icon(Icons.lock_person_outlined),
+                            suffixIcon: IconButton(
+                              onPressed: () => setState(() {
+                                _obscureConfirmPw = !_obscureConfirmPw;
+                              }),
+                              icon: Icon(
+                                _obscureConfirmPw ? Icons.visibility_off : Icons.visibility,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            filled: true,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        FilledButton(
+                          onPressed: _resetting ? null : _resetPassword,
+                          child: _resetting
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2.2),
+                                )
+                              : const Text('비밀번호 변경'),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

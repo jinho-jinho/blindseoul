@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               onFieldSubmitted: (_) => _login(),
                               validator: (v) {
                                 if ((v ?? '').isEmpty) return '비밀번호를 입력해주세요';
-                                if ((v ?? '').length < 6) return '6자 이상 입력해주세요';
+                                if ((v ?? '').length < 8) return '8자 이상 입력해주세요';
                                 return null;
                               },
                             ),
